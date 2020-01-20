@@ -1,10 +1,7 @@
-#include "boost/log/trivial.hpp"
-#include "boost/log/utility/setup.hpp"
-#include "boost/log/sources/logger.hpp"
-#include "boost/log/sources/basic_logger.hpp"
-#include "boost/log/expressions.hpp"
+#include "boost/log/trivial.hpp"       // provides the BOOST_LOG_TRIVIAL macro.
+#include "boost/log/utility/setup.hpp" // to configure logging.
 
-// These 2 heards ae needed for the timestamp expression.
+// These 2 headers are needed for the timestamp expression.
 #include "boost/log/expressions/formatters/date_time.hpp"
 #include "boost/log/support/date_time.hpp"
 
