@@ -9,14 +9,20 @@
 #include "boost/log/expressions/keyword_fwd.hpp"
 #include "boost/log/expressions/keyword.hpp"
 
+// headers for command-line parsing.
+#include "boost/program_options.hpp"
+
 #include <iomanip>
 #include <iostream>
 
 namespace log = boost::log;
+namespace po = boost::program_options;
 
 void configureLogging();
 void coloring_formatter(log::record_view const &rec,
                         log::formatting_ostream &strm);
+
+bool parseArgs(int argc, char *argv[]);
 
 // This macro use is needed to access the timestamp using rec[timestamp] in
 // the coloring formatter function.
@@ -26,11 +32,15 @@ BOOST_LOG_ATTRIBUTE_KEYWORD(timestamp, "TimeStamp",
 int main(int argc, char *argv[])
 {
     configureLogging();
-    BOOST_LOG_TRIVIAL(debug) << "Hello, world!";
-    BOOST_LOG_TRIVIAL(info) << "Hello, world!";
-    BOOST_LOG_TRIVIAL(warning) << "Hello, world!";
-    BOOST_LOG_TRIVIAL(error) << "Hello, world!";
-    BOOST_LOG_TRIVIAL(fatal) << "Hello, world!";
+    const auto runCode = parseArgs(argc, argv);
+    if (runCode)
+    {
+        BOOST_LOG_TRIVIAL(debug) << "Hello, world!";
+        BOOST_LOG_TRIVIAL(info) << "Hello, world!";
+        BOOST_LOG_TRIVIAL(warning) << "Hello, world!";
+        BOOST_LOG_TRIVIAL(error) << "Hello, world!";
+        BOOST_LOG_TRIVIAL(fatal) << "Hello, world!";
+    }
 
     return 0;
 }
@@ -96,4 +106,33 @@ void coloring_formatter(
         // Restore the default color
         strm << "\033[0m";
     }
+}
+
+bool parseArgs(int argc, char *argv[])
+{
+    po::options_description desc("Allowed options");
+    desc.add_options()("help", "produce help messaeg");
+    desc.add_options()("compression", po::value<int>(), "compression level");
+
+    po::variables_map vm;
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);
+
+    if (vm.count("help"))
+    {
+        BOOST_LOG_TRIVIAL(info) << "\n"
+                                << desc;
+        return false;
+    }
+
+    if (vm.count("compression"))
+    {
+        BOOST_LOG_TRIVIAL(info) << "compression level "
+                                << vm["compression"].as<int>();
+    }
+    else
+    {
+        BOOST_LOG_TRIVIAL(info) << "compression not set";
+    }
+    return true;
 }
