@@ -48,6 +48,11 @@ void configureLogging()
     static const auto format = std::string{
         "[%TimeStamp%] [%Severity%]:  %Message%"};
 
+    logging::add_file_log(
+        logging::keywords::file_name = "../logs/console.log",
+        logging::keywords::format = format,
+        logging::keywords::auto_flush = true);
+
     // This registers the LineID, TimeStamp, ProcessID and ThreadID globally.
     // LineID: counter for each log record, starting from 1.
     // TimeStamp: time at which record is created.
