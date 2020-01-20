@@ -111,10 +111,10 @@ void coloring_formatter(
 bool parseArgs(int argc, char *argv[])
 {
     po::options_description desc("Allowed options");
-    desc.add_options()("help", "produce help messaeg");
+    desc.add_options()("help,h", "produce help messaeg");
 
     int compression;
-    desc.add_options()("compression",
+    desc.add_options()("compression,c",
                        po::value<int>(&compression)->default_value(10),
                        "compression level");
 
