@@ -37,9 +37,10 @@ endif()
 # folder. The folder listed as BOOST_ROOT should contain an "include" folder
 # with headers and a "lib" folder with built boost libraries.
 set(BOOST_ROOT "$ENV{HOME}/bin/boost/binaries")
-find_package(Boost 1.72 REQUIRED COMPONENTS filesystem)
-# set(LIBS ${LIBS} ${Boost_LIBRARIES})
-set(LIBS ${LIBS} Boost::filesystem)
+find_package(Boost 1.72 REQUIRED COMPONENTS log log_setup)
+add_compile_definitions(BOOST_LOG_DYN_LINK)
+include_directories(${Boost_INCLUDE_DIRS})
+set(LIBS ${LIBS} ${Boost_LIBRARIES})
 
 # Source files
 add_subdirectory(src)
