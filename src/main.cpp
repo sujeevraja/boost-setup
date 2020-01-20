@@ -42,11 +42,11 @@ void configureLogging()
 {
     logging::add_console_log(
         std::cout,
-        // keywords::format = format,
         logging::keywords::auto_flush = true)
         ->set_formatter(&coloring_formatter);
 
-    static const auto format = std::string{"[%TimeStamp%] [%Severity%]:  %Message%"};
+    static const auto format = std::string{
+        "[%TimeStamp%] [%Severity%]:  %Message%"};
 
     // This registers the LineID, TimeStamp, ProcessID and ThreadID globally.
     // LineID: counter for each log record, starting from 1.
@@ -59,6 +59,8 @@ void configureLogging()
 void coloring_formatter(
     logging::record_view const &rec, logging::formatting_ostream &strm)
 {
+    // This function comes from the following Stack Overflow question:
+    // https://stackoverflow.com/questions/38309479/how-to-add-color-coding-to-boostlog-console-output
     auto severity = rec[logging::trivial::severity];
     if (severity)
     {
@@ -81,6 +83,8 @@ void coloring_formatter(
     }
 
     // Format the message here...
+    // Accessing the timestamp here is based on the discussion in:
+    // https://stackoverflow.com/questions/38618094/how-to-output-timestamp-and-threadid-attributes-with-custom-boostlog-formatter
     strm << "[" << rec[timestamp] << "]["
          << std::setw(8) << severity << "] "
          << rec[logging::expressions::smessage];
