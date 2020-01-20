@@ -112,7 +112,11 @@ bool parseArgs(int argc, char *argv[])
 {
     po::options_description desc("Allowed options");
     desc.add_options()("help", "produce help messaeg");
-    desc.add_options()("compression", po::value<int>(), "compression level");
+
+    int compression;
+    desc.add_options()("compression",
+                       po::value<int>(&compression)->default_value(10),
+                       "compression level");
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -129,6 +133,9 @@ bool parseArgs(int argc, char *argv[])
     {
         BOOST_LOG_TRIVIAL(info) << "compression level "
                                 << vm["compression"].as<int>();
+
+        BOOST_LOG_TRIVIAL(info) << "compression level from variable "
+                                << compression;
     }
     else
     {
